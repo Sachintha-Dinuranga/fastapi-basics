@@ -1,9 +1,15 @@
 from fastapi import FastAPI
 
+from models import Product
+
 app = FastAPI()
 
 # list of products
 products = [
+    Product(id=1, name="phone", description="budget phone", price=99, quantity=10),
+    Product(id=2, name="Laptop", description="A powerful laptop", price=999.99, quantity=30),
+    Product(id=3, name="Pen", description="A blue ink pen", price=1.99, quantity=100),
+    Product(id=4, name="Table", description="A wooden Table", price=199.99, quantity=20),
     
 ]
 
@@ -14,4 +20,40 @@ async def root():
 # get all the products
 @app.get("/products")
 def get_all_products():
-    return "all products"
+    return products
+
+# get product by id
+@app.get("/product/{id}")
+def get_product_by_id(id: int):
+    for product in products:
+        if product.id == id:
+            return product
+        
+    return "product not found"
+
+# add a product
+@app.post("/product")
+def add_product(product: Product):
+    products.append(product)
+    return product
+
+# update a product
+@app.put("/product")
+def update_product(id: int, product: Product):
+    for i in range(len(products)):
+        if products[i].id == id:
+            products[i] = product
+            return "Product Added successfully"
+
+    return "No product not found"
+
+#delete a product
+@app.delete("/product")
+def delete_product(id: int):
+    for i in range(len(products)):
+        if products[i].id == id:
+            del products[i]
+            return "Product Deleted"
+        
+    return "Prodcut Not Found"
+            
