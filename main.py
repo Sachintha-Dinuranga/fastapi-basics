@@ -1,8 +1,12 @@
 from fastapi import FastAPI
-
 from models import Product
+from db_config import session, engine
+import db_model
 
 app = FastAPI()
+
+# This create tables in the data base
+db_model.Base.metadata.create_all(bind=engine)
 
 # list of products
 products = [
@@ -20,6 +24,8 @@ async def root():
 # get all the products
 @app.get("/products")
 def get_all_products():
+    db = session()
+    db.query()
     return products
 
 # get product by id
